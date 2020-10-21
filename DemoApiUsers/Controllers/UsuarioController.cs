@@ -2,45 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoApiUsers.models;
+using DemoApiUsers.services;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DemoApiUsers.Controllers
 {
-    [Route("api/[controller]")]
-    public class ValuesController : Controller
+    [Produces("application/json")]
+    [Route("api/Admin")]
+    public class UsuarioController : Controller
     {
-        // GET: api/values
+        private IDbService _servicioBD;
+
+        public UsuarioController(IDbService servicioBD)
+        {
+            _servicioBD = servicioBD;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("ObtenerUsuarios")]
+        public async Task<IActionResult> ObtenerUsuarios()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _servicioBD.ObtenerUsuario();
+            return Ok(result);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("ObtenerUsuarioPorId")]
+        public async Task<IActionResult> ObtenerUsuarioPorId(int id)
         {
-            return "value";
+            var result = await _servicioBD.ObtenerUsuarioPorId(id);
+            return Ok(result);
         }
 
-        // POST api/values
+        [HttpDelete]
+        [Route("BorrarUsuario")]
+        public async Task<IActionResult> BorrarUsuario(int id)
+        {
+            var result = await _servicioBD.EliminarUsuario(id);
+            return Ok(result);
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("AgregarUsuario")]
+        public async Task<IActionResult> AgregarUsuario([FromBody] Usuario modelo)
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var result = await _servicioBD.GuardarUsuario(modelo);
+            return Ok(result);
         }
     }
 }

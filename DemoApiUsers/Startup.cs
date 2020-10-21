@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoApiUsers.services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,8 @@ namespace DemoApiUsers
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IDbService>(new DbService());
+            services.AddSingleton<IDbService_LogIn>(new DbService_LogIn());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
